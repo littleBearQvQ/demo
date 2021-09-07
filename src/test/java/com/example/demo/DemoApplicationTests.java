@@ -1,14 +1,19 @@
 package com.example.demo;
 
 import com.example.demo.enums.WeekdaysEnum;
+import com.example.demo.redis.RedisUnit;
 import com.example.demo.rgb.SynchronizedRGB;
 import com.example.demo.utils.StringUtils;
 import com.example.demo.utils.ValidateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.ScanOptions;
 
 import java.text.MessageFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 @SpringBootTest
@@ -16,6 +21,9 @@ import java.text.MessageFormat;
 class DemoApplicationTests {
 
     /*private final Logger logger = LoggerFactory.getLogger(this.getClass());*/
+
+    @Autowired
+    private RedisUnit redisUnit;
 
     @Test
     void contextLoads() {
@@ -68,6 +76,72 @@ class DemoApplicationTests {
             log.info("index:{} info:{}",count,weekdaysEnum.toString());
         }
         /*log.info(WeekdaysEnum.findByCode(1).toString());*/
+    }
+
+
+
+    @Test
+    void testRedis(){
+        /*redisUnit.setListKey("name1","name1","right");
+        redisUnit.setListKey("name2","name1","right");
+        redisUnit.setListKey("name3","name1","left");*/
+
+        /*redisUnit.setListKey("name2","name1","right");
+        redisUnit.setListKey("name2","name1","right");*/
+
+        /*Collection<String> collection = new ArrayList<String>();
+
+        collection.add("name1");
+        collection.add("name2");
+        collection.add("name3");
+
+        log.info(String.valueOf(redisUnit.deleteKeys(collection)));*/
+        //redisUnit.setKey("name1","name1");
+        /*redisUnit.rename("name1","name2");*/
+
+        /*log.info(String.valueOf(redisUnit.deleteKey("name")));*/
+
+        /*log.info(String.valueOf(redisUnit.getKeyType("name2")));*/
+        //redisUnit.setStringKey("name2","name");
+        //redisUnit.setListKey("name1","name","right");
+        /*redisUnit.setExpire("name1",10L, TimeUnit.MINUTES);
+        redisUnit.persistKey("name1");
+        log.info(String.valueOf(redisUnit.getExpireTime("name1")));*/
+        //redisUnit.setListKey("name1","name1","right");
+       //redisUnit.setDataBase(1);
+        //redisUnit.setListKey("name1","name1","right");
+        //redisUnit.setListKeyWithValue("name2",2,"123");
+        //redisUnit.setStringKey("name1","www");
+        //redisUnit.setHashMapKey("name4","12313","name");
+        /*redisUnit.deleteKey("name4");*/
+
+        /*Map<Object,Object> maps = new HashMap<>();
+        maps.put("3","111");
+        maps.put("4","222");
+
+        redisUnit.setHashMapKeys("name5",maps);*/
+
+        //redisUnit.getHashMapValue("name5");
+
+        /*redisUnit.hashScan("name5", ScanOptions.NONE).forEachRemaining(info->{
+            log.info("key:{} value:{}",info.getKey(),info.getValue());
+        });*/
+
+       /* redisUnit.setSetKey("name6","name1");
+        redisUnit.setSetKey("name6","name2");
+        redisUnit.setSetKey("name6","name3");
+        redisUnit.setSetKey("name6","name4");*/
+
+        /*for(Object object:redisUnit.getSetScan("name6")){
+            log.info(object.toString());
+        }*/
+        /*List list = new ArrayList<>(redisUnit.getSetScan("name6"));
+
+        list.forEach(info->{
+            log.info(info.toString());
+        });*/
+
+
     }
 
 }
