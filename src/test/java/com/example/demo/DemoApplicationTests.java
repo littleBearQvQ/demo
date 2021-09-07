@@ -1,11 +1,14 @@
 package com.example.demo;
 
+import com.example.demo.enums.WeekdaysEnum;
+import com.example.demo.rgb.SynchronizedRGB;
 import com.example.demo.utils.StringUtils;
 import com.example.demo.utils.ValidateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.MessageFormat;
 
 
 @SpringBootTest
@@ -47,6 +50,24 @@ class DemoApplicationTests {
 
         log.info(StringUtils.getOnum());
 
+    }
+
+    @Test
+    void testRGB(){
+        SynchronizedRGB synchronizedRGB =  new SynchronizedRGB(0, 0, 0, "Pitch Black");
+        int myColorInt = synchronizedRGB.getRGB();      // Statement1
+        String myColorName = synchronizedRGB.getName(); // Statement2
+        log.info(MessageFormat.format("myColorInt:{0},myColorName:{1}",myColorInt,myColorName));
+    }
+
+    @Test
+    void testWeek(){
+       int count = 0;
+        for(WeekdaysEnum weekdaysEnum:WeekdaysEnum.getWeekEnumMap().values()){
+            count++;
+            log.info("index:{} info:{}",count,weekdaysEnum.toString());
+        }
+        /*log.info(WeekdaysEnum.findByCode(1).toString());*/
     }
 
 }
