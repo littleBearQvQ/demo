@@ -25,6 +25,13 @@ public class RedisUnit {
     @Value("${spring.redis.database}")
     private Integer dbIndex;
 
+    public static final String STRING = "STRING";
+    public static final String HASH = "HASH";
+    public static final String LIST = "LIST";
+    public static final String SET = "SET";
+    public static final String ZSET = "ZSET";
+
+
     public void getDBIndex(){
         log.info("dbIndex:{}",this.dbIndex);
     }
@@ -61,7 +68,6 @@ public class RedisUnit {
             log.info("查无此键");
             return false;
         }
-
     }
 
     /**
@@ -121,6 +127,18 @@ public class RedisUnit {
         return redisTemplate.move(keyName,index);
     }
 
+    public void outPutCollection(Collection collection){
+        collection.forEach(infos->{
+            log.info("集合内容:{}",infos);
+        });
+    }
+
+    public void outPutCursor(Cursor<Map.Entry<Object, Object>> cursor){
+        cursor.forEachRemaining(infos->{
+            log.info("集合内容[key:{}  value:{}]",infos.getKey(),infos.getValue());
+        });
+    }
+
     /**
      * 向redis(String)中写入键值对
      *
@@ -129,7 +147,7 @@ public class RedisUnit {
      */
     public void setStringKey(String key, String value) {
         if (StringUtils.equals(String.valueOf(getKeyType(key)), "NONE")|
-                StringUtils.equals(String.valueOf(getKeyType(key)), "STRING")) {
+                StringUtils.equals(String.valueOf(getKeyType(key)), RedisUnit.STRING)) {
             redisTemplate.opsForValue().set(key, value);
             log.info("key:{} value:{}", key, value);
         } else {
@@ -146,7 +164,7 @@ public class RedisUnit {
      */
     public void setListKey(String key, String values, String operate) {
         if (StringUtils.equals(String.valueOf(getKeyType(key)), "NONE") |
-                StringUtils.equals(String.valueOf(getKeyType(key)), "LIST")) {
+                StringUtils.equals(String.valueOf(getKeyType(key)), RedisUnit.LIST)) {
             switch (operate) {
                 case "right":
                     redisTemplate.opsForList().rightPush(key, values);
@@ -170,7 +188,7 @@ public class RedisUnit {
      * 修改指定键(list)中指定坐标的值
      * */
     public void setListKeyWithValue(String keyName,long index,String value){
-        if(StringUtils.equals(String.valueOf(getKeyType(keyName)), "LIST")){
+        if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.LIST)){
             redisTemplate.opsForList().set(keyName,index,value);
         }else{
             log.warn("类型不一致,该键的原类型为:{}", getKeyType(keyName));
@@ -184,7 +202,7 @@ public class RedisUnit {
      *
      */
     public String getStringValue(String keyName) {
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        /*redisTemplate.setValueSerializer(new StringRedisSerializer());*/
         ValueOperations<String, String> ops = redisTemplate.opsForValue();
         log.info("key:{} value:{}", keyName, ops.get(keyName));
         return ops.get(keyName);
@@ -196,7 +214,7 @@ public class RedisUnit {
      * @param keyName 键名
      * */
     public void getListValue(String keyName){
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        /*redisTemplate.setValueSerializer(new StringRedisSerializer());*/
         redisTemplate.opsForList().range(keyName,0,-1).forEach(infos->{
             log.info("infos:{}",infos);
         });
@@ -220,7 +238,6 @@ public class RedisUnit {
      * */
     public void setHashMapKeys(Object keyName, Map<Object,Object> maps){
          redisTemplate.opsForHash().putAll(keyName,maps);
-
     }
 
     /**
@@ -229,7 +246,7 @@ public class RedisUnit {
      * @param keyName 键名
      * */
     public void getHashMapValue(String keyName){
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        /*redisTemplate.setValueSerializer(new StringRedisSerializer());*/
         HashOperations hashOperations = redisTemplate.opsForHash();
         List keyList = new ArrayList(hashOperations.keys(keyName));
         List valueList = hashOperations.values(keyName);
@@ -262,9 +279,145 @@ public class RedisUnit {
      * @param keyName 键名
      * */
     public Set<Object> getSetScan(String keyName){
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        //redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate.opsForSet().members(keyName);
     }
 
+    /**
+     * 获取两个SET的交集(I) 并集(U) 差集(D) ,并且是否存储于指定键中
+     * @param key 键名
+     * @param otherKey 其他键名
+     * @param operateOne 操作一 交集(I) 并集(U) 差集(D)
+     * @param operateTwo 操作二 Y/other
+     * */
+    public Set<Object> getAndStoreSetCollection(String key,String otherKey,String operateOne,String destKey,String operateTwo){
+        Set<Object> set;
+        if(StringUtils.equals(String.valueOf(getKeyType(key)), RedisUnit.SET) &
+                StringUtils.equals(String.valueOf(getKeyType(otherKey)), RedisUnit.SET)){
+            switch (operateOne.toUpperCase()){
+                case "I":
+                    set = redisTemplate.opsForSet().intersect(key,otherKey);
+                    if(StringUtils.equals(operateTwo.toUpperCase(),"Y")){
+                        redisTemplate.opsForSet().intersectAndStore(key,otherKey,destKey);
+                        log.info("存储成功");
+                    }
+                    return set;
+                case "U":
+                    set = redisTemplate.opsForSet().union(key,otherKey);
+                    if(StringUtils.equals(operateTwo.toUpperCase(),"Y")){
+                        redisTemplate.opsForSet().unionAndStore(key,otherKey,destKey);
+                        log.info("存储成功");
+                    }
+                    return set;
+                case "D":
+                    set = redisTemplate.opsForSet().difference(key,otherKey);
+                    if(StringUtils.equals(operateTwo.toUpperCase(),"Y")){
+                        redisTemplate.opsForSet().differenceAndStore(key,otherKey,destKey);
+                        log.info("存储成功");
+                    }
+                    return set;
+            }
+        }else{
+            log.info("类型必须都为SET类型 key:{} otherKey:{}",getKeyType(key),getKeyType(otherKey));
+        }
+        return null;
+    }
+
+    /**
+     * 向redis(ZSet)中插入键值对
+     * @param key 键名
+     * @param value 值
+     * @param score 优先级大小 从小到大
+     * */
+    public Boolean setZSetKey(String key,String value,long score){
+        return redisTemplate.opsForZSet().add(key,value,score);
+    }
+
+    /**
+     * 根据score值查询ZSet集合内容 从小到大
+     * @param keyName 键名
+     * @param minScore 最小值
+     * @param maxScore 最大值
+     * */
+    public Set<Object> getZSetValueByScore(String keyName,long minScore,long maxScore){
+        return redisTemplate.opsForZSet().range(keyName,minScore,maxScore);
+    }
+
+    /**
+     * 存储两个ZSet的交集(I) 并集(U) ,于指定键中
+     * @param key 键名
+     * @param otherKey 其他键名
+     * @param operate 操作
+     * @param destKey 存储键名
+     * */
+    public void storeZSetCollection(String key,String otherKey,String destKey,String operate){
+        if(StringUtils.equals(String.valueOf(getKeyType(key)), RedisUnit.ZSET) &
+                StringUtils.equals(String.valueOf(getKeyType(otherKey)), RedisUnit.ZSET)){
+            switch (operate.toUpperCase()){
+                case "I":
+                        redisTemplate.opsForZSet().intersectAndStore(key,otherKey,destKey);
+                        log.info("存储成功");
+                    break;
+                case "U":
+                        redisTemplate.opsForZSet().unionAndStore(key,otherKey,destKey);
+                        log.info("存储成功");
+                    break;
+            }
+        }else{
+            log.info("类型必须都为ZSET类型 key:{} otherKey:{}",getKeyType(key),getKeyType(otherKey));
+        }
+    }
+
+    /**
+     * 删除指定键中的指定value
+     * @param keyName 指定键
+     * @param value 指定值
+     * @param listIndex LIST类型中的下标
+     * @param operate 操作
+     * */
+    public void deleteValue(String keyName,String value,Long listIndex,String operate){
+        switch (operate.toUpperCase()){
+            case RedisUnit.STRING:
+                if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.STRING)){
+                    redisTemplate.delete(keyName);
+                    log.info("操作成功");
+                }else{
+                    log.info("类型错误,输入类型为:{}",getKeyType(keyName));
+                }
+                break;
+            case RedisUnit.LIST:
+                if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.LIST)){
+                    redisTemplate.opsForList().remove(keyName,listIndex,value);
+                    log.info("操作成功");
+                }else{
+                    log.info("类型错误,输入类型为:{}",getKeyType(keyName));
+                }
+                break;
+            case RedisUnit.HASH:
+                if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.HASH)){
+                    redisTemplate.opsForHash().delete(keyName,value);
+                    log.info("操作成功");
+                }else{
+                    log.info("类型错误,输入类型为:{}",getKeyType(keyName));
+                }
+                break;
+            case RedisUnit.SET:
+                if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.SET)){
+                    redisTemplate.opsForSet().remove(keyName,value);
+                    log.info("操作成功");
+                }else{
+                    log.info("类型错误,输入类型为:{}",getKeyType(keyName));
+                }
+                break;
+            case RedisUnit.ZSET:
+                if(StringUtils.equals(String.valueOf(getKeyType(keyName)), RedisUnit.ZSET)){
+                    redisTemplate.opsForZSet().remove(keyName,value);
+                    log.info("操作成功");
+                }else{
+                    log.info("类型错误,输入类型为:{}",getKeyType(keyName));
+                }
+                break;
+        }
+    }
 
 }

@@ -12,8 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 @SpringBootTest
@@ -121,7 +123,7 @@ class DemoApplicationTests {
 
         redisUnit.setHashMapKeys("name5",maps);*/
 
-        //redisUnit.getHashMapValue("name5");
+        /*redisUnit.getHashMapValue("name5");*/
 
         /*redisUnit.hashScan("name5", ScanOptions.NONE).forEachRemaining(info->{
             log.info("key:{} value:{}",info.getKey(),info.getValue());
@@ -139,9 +141,17 @@ class DemoApplicationTests {
 
         list.forEach(info->{
             log.info(info.toString());
-        });*/
-
-
+        });
+*/
+        //redisUnit.outPutCursor(redisUnit.hashScan("name5",ScanOptions.NONE));
+        /*redisUnit.setZSetKey("name9","name1",8);
+        redisUnit.setZSetKey("name9","name6",4);
+        redisUnit.setZSetKey("name9","name3",8);
+        redisUnit.setZSetKey("name9","name4",1);*/
+        /*redisUnit.deleteKey("name8");*/
+        //redisUnit.outPutCollection(redisUnit.getZSetValueByScore("name8",1,8));
+        /*redisUnit.storeZSetCollection("name8","name9","destKey","u");*/
+        redisUnit.deleteValue("name8","name3",2L,RedisUnit.STRING);
     }
 
 }
