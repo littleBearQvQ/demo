@@ -12,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.ScanOptions;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 @SpringBootTest
@@ -151,7 +148,8 @@ class DemoApplicationTests {
         /*redisUnit.deleteKey("name8");*/
         //redisUnit.outPutCollection(redisUnit.getZSetValueByScore("name8",1,8));
         /*redisUnit.storeZSetCollection("name8","name9","destKey","u");*/
-        redisUnit.deleteValue("name8","name3",2L,RedisUnit.STRING);
+        /*redisUnit.deleteValue("name8","name3",2L,RedisUnit.STRING);*/
+        log.info(UUID.randomUUID().toString());
     }
 
 }
