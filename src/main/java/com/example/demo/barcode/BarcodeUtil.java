@@ -21,13 +21,13 @@ import java.util.Map;
 public class BarcodeUtil {
 
     private static final int WIDTH = 400;
-    private static final int HEIGHT = 150;
+    private static final int HEIGHT = 100;
 
     public static void generateCode(File file, String content){
         // 定义位图矩阵BitMatrix
         BitMatrix matrix = null;
         try {
-            // 使用code_128格式进行编码生成100*25的条形码
+            // 使用code_128格式进行编码生成400*100的条形码
             MultiFormatWriter writer = new MultiFormatWriter();
 
             matrix = writer.encode(content, BarcodeFormat.CODE_128, WIDTH, HEIGHT, null);
