@@ -25,7 +25,7 @@ public class CodeCreateApplicationTests {
         // 解析二维码
         String str = QRCodeUtil.decode(destPath);
         // 打印出解析出的内容
-        log.info(str);
+        log.info(str.toString());
 
     }
 
