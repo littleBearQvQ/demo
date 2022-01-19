@@ -149,7 +149,8 @@ class DemoApplicationTests {
         //redisUnit.outPutCollection(redisUnit.getZSetValueByScore("name8",1,8));
         /*redisUnit.storeZSetCollection("name8","name9","destKey","u");*/
         /*redisUnit.deleteValue("name8","name3",2L,RedisUnit.STRING);*/
-        log.info(UUID.randomUUID().toString());
+        /*log.info(UUID.randomUUID().toString());*/
+
     }
 
 }

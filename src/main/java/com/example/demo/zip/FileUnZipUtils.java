@@ -145,6 +145,7 @@ public class FileUnZipUtils {
 			}
 
 		}
+		log.info("read finish");
 	}
 
 	public static void readZipContent(String zipFilePath, String outputDirectory,Boolean isDelete){
