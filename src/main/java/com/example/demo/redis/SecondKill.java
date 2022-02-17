@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * 秒杀抢购
- * @author pan_junbiao
+ *
  **/
 public class SecondKill implements Runnable
 {
@@ -18,7 +18,7 @@ public class SecondKill implements Runnable
     {
         this.userInfo = userInfo;
     }
-
+    
     @Override
     public void run()
     {

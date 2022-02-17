@@ -7,7 +7,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Redis秒杀功能的实现，1000人抢购100部手机
- * @author pan_junbiao
+ *
  **/
 public class SecondKillTest
 {
