@@ -150,6 +150,14 @@
             <version>3.12.0</version>
         </dependency>
 
+        <!--ocr-->
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+
 
     </dependencies>
 
