@@ -18,7 +18,9 @@ import java.util.Enumeration;
 public class FileUnZipUtils {
 
 	private final static int buffer = 1024;
-
+	/**
+	 * 创建一个新的目录
+	 * */
 	private static void createDirectory(String directory, String subDirectory) {
 		String dir[];
 		File fl = new File(directory);
@@ -39,7 +41,9 @@ public class FileUnZipUtils {
 			log.info("unZip success！");
 		}
 	}
-
+	/**
+	 * 将指定文件解压
+	 * */
 	public static String unZip(String zipFilePath, String outputDirectory) {
 		try {
 			ZipFile zipFile = new ZipFile(zipFilePath,"GBK");
@@ -72,7 +76,7 @@ public class FileUnZipUtils {
 					while ((c = in.read(by)) != -1) {
 						out.write(by, 0, c);
 					}
-					// 关闭流
+
 			        if (in != null) {
 			        	in.close();
 			        }
@@ -89,7 +93,9 @@ public class FileUnZipUtils {
 		}
 		return outputDirectory;
 	}
-
+	/**
+	 * 将指定文件压缩成文件夹
+	 * */
 	public static boolean zip(String srcDirName, String zipFilePath) {
 		boolean flag = false;
 		try {
@@ -115,7 +121,9 @@ public class FileUnZipUtils {
 		}
 		return flag;
 	}
-
+	/**
+	 * 读取文件夹下的所有内容
+	 * */
 	public static void readFileContent(String fileDir,Boolean isDelete){
 
 		String fileName = null;
@@ -123,9 +131,11 @@ public class FileUnZipUtils {
 		String fileSize = null;
 		String suffixName = null;
 		String prefixName = null;
+		String fileDate = null;
 		File unzipDir = new File(fileDir);
-		File[] files  = FileUtil.fileSortByCATPartASC(unzipDir.listFiles());
-		FileUtil.fileSortByCATPartASC(files);
+		//File[] files  = FileUtil.fileSortByCATPartASC(unzipDir.listFiles());
+		File[] files  = FileUtil.fileSortByCATPartASC(FileUtil.orderByDate(fileDir),"png");
+		/*File[] files  = FileUtil.orderByDate(fileDir);*/
 		for(File f:files){
 
 			fileName = f.getName();
@@ -133,12 +143,15 @@ public class FileUnZipUtils {
 			suffixName = FileUtil.getFileSuffixName(f.getName());
 			prefixName = FileUtil.getFilePrefixName(f.getName());
 			fileSize = FileUtil.getFormatFileSize(filePath);
+			fileDate = FileUtil.getFileDate(filePath);
+
 			log.info("=====================FileInfos==========================");
 			log.info("fileName:{}",fileName);
 			log.info("filePath:{}",filePath);
 			log.info("suffixName:{}",suffixName);
 			log.info("prefixName:{}",prefixName);
 			log.info("fileSize:{}",fileSize);
+			log.info("fileDate:{}",fileDate);
 
 			if(isDelete){
 				new File(filePath).delete();

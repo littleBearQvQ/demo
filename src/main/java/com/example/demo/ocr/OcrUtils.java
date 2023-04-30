@@ -1,5 +1,7 @@
+/*
 package com.example.demo.ocr;
 
+import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 import net.sourceforge.tess4j.util.LoadLibs;
@@ -18,8 +20,9 @@ public class OcrUtils {
             double start = System.currentTimeMillis();
 
             //初始化Tesseract
-            Tesseract tesseract = new Tesseract();
-            tesseract.setLanguage("chi_sim");
+            ITesseract tesseract = new Tesseract();
+            tesseract.setDatapath("D:\\Tools\\Tess4J\\tessdata");
+            tesseract.setLanguage("osd");
 
             //获取tessdata下的字体库文件
             File tessDataFolder = LoadLibs.extractTessResources("tessdata");
@@ -47,3 +50,4 @@ public class OcrUtils {
         return result;
     }
 }
+*/

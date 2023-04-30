@@ -3,6 +3,7 @@ package com.example.demo;
 import com.example.demo.enums.WeekdaysEnum;
 import com.example.demo.redis.RedisUnit;
 import com.example.demo.rgb.SynchronizedRGB;
+import com.example.demo.utils.DateUtil;
 import com.example.demo.utils.StringUtils;
 import com.example.demo.utils.ValidateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.ScanOptions;
 
+import java.awt.*;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.Callable;
 
 
 @SpringBootTest
@@ -81,9 +84,12 @@ class DemoApplicationTests {
 
     @Test
     void testRedis(){
-        /*redisUnit.setListKey("name1","name1","right");
+        redisUnit.setListKey("name1","name1","right");
         redisUnit.setListKey("name2","name1","right");
-        redisUnit.setListKey("name3","name1","left");*/
+        redisUnit.setListKey("name3","name1","left");
+
+        String string = "[123][456]";
+        string.indexOf("[");
 
         /*redisUnit.setListKey("name2","name1","right");
         redisUnit.setListKey("name2","name1","right");*/
@@ -152,5 +158,32 @@ class DemoApplicationTests {
         /*log.info(UUID.randomUUID().toString());*/
 
     }
+
+
+    /*@Test
+    void contextLoads2() throws AWTException {
+        Robot robot = new Robot();
+        robot.mouseMove(1000,200);
+    }*/
+
+    @Test
+    void contextLoads3() {
+        /*String string = "[132][333][222]5454654[12313]";
+        string.lastIndexOf("]",2);*/
+        /*Date date = DateUtil.parseDate("2000-2-16 10:59:31");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Integer day = calendar.get(Calendar.DAY_OF_MONTH);
+        Integer month = calendar.get(Calendar.MONTH);
+        Integer year = calendar.get(Calendar.YEAR);
+        Integer hour = calendar.get(Calendar.HOUR);
+        Integer minute = calendar.get(Calendar.MINUTE);
+        Integer second = calendar.get(Calendar.SECOND);
+
+        log.info("Year:{},Month:{},Day:{},hour:{},minute:{},second:{}",
+                year,month+1,day,hour,minute,second);*/
+        log.info(DateUtil.getStringToDateContent("2000-2-16 10:59"));
+    }
+
 
 }

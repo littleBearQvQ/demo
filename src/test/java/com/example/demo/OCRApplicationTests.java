@@ -1,3 +1,4 @@
+/*
 package com.example.demo;
 
 import com.example.demo.ocr.OcrUtils;
@@ -12,11 +13,14 @@ public class OCRApplicationTests {
 
     @Test
     public void ExcelExportTest() throws Exception {
-        /*System.out.println(OcrUtils.orcCn("D:\\Works\\demo\\orcTest.jpg"));*/
-        System.out.println(OcrUtils.orcCn("D:\\Works\\demo\\test.png"));
+        */
+/*System.out.println(OcrUtils.orcCn("D:\\Works\\demo\\orcTest.jpg"));*//*
+
+        System.out.println(OcrUtils.orcCn("D:/Works/demo/test.png"));
 
     }
 
 }
 
 
+*/
